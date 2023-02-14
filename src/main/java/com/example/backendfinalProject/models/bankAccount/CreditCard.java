@@ -37,7 +37,7 @@ public class CreditCard extends Account {
     }
 
     public void setInterestRate(double interestRate) {
-        if (interestRate >= 0.1 && interestRate <= 0.2) {
+        if (interestRate >= 0.1 && interestRate <= 0.2 ) {
             this.interestRate = interestRate;
         } else  {
             System.err.println("Interest rate must be between 0.1 and 0.2. Will be set by default to 0.1");
