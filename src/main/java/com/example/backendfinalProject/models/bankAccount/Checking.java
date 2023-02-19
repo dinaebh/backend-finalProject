@@ -1,5 +1,7 @@
 package com.example.backendfinalProject.models.bankAccount;
 
+import com.example.backendfinalProject.models.enums.Status;
+import com.example.backendfinalProject.models.user.AccountHolder;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 
@@ -14,8 +16,8 @@ public class Checking extends Account {
     private final BigDecimal monthlyMaintenanceFee = BigDecimal.valueOf(12);
     private String secretKey;
 
-    public Checking(BigDecimal balance, String primaryOwner, LocalDate creationDate, String secretKey) {
-        super(balance, primaryOwner, creationDate);
+    public Checking(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, LocalDate creationDate, Status status, String secretKey) {
+        super(balance, primaryOwner, secondaryOwner, creationDate, status);
         this.secretKey = secretKey;
     }
 
