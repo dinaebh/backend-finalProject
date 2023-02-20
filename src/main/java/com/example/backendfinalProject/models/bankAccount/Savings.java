@@ -2,6 +2,10 @@ package com.example.backendfinalProject.models.bankAccount;
 
 import com.example.backendfinalProject.models.enums.Status;
 import com.example.backendfinalProject.models.user.AccountHolder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.cglib.core.Local;
@@ -22,7 +26,8 @@ public class Savings extends Account {
     private BigDecimal minimumBalance = BigDecimal.valueOf(1000);
 
     private String secretKey;
-
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastInterestDate = LocalDate.now();
 
     public Savings() {
@@ -74,10 +79,11 @@ public class Savings extends Account {
     //add interest every year
 
     public void addInterest() {
-        if(Period.between(lastInterestDate, LocalDate.now()).getMonths() >= 1){
-            setBalance(getBalance().multiply(getInterestRate())
-                    .multiply(BigDecimal.valueOf(Period.between(lastInterestDate, LocalDate.now()).getYears())).add(getBalance()));
-            lastInterestDate.plusYears(Period.between(lastInterestDate, LocalDate.now()).getYears());
+        if (LocalDate.now().getYear() > this.lastInterestDate.getYear()) {
+            for (int i = LocalDate.now().getYear(); i > this.getLastInterestDate().getYear() ; i--) {
+                this.setBalance(this.getBalance().multiply(interestRate.add(BigDecimal.valueOf(1))));
+            }
+            setLastInterestDate(LocalDate.now());
         }
     }
 
@@ -95,5 +101,13 @@ public class Savings extends Account {
     public BigDecimal getBalance() {
         addInterest();
         return super.getBalance();
+    }
+
+    public LocalDate getLastInterestDate() {
+        return lastInterestDate;
+    }
+
+    public void setLastInterestDate(LocalDate lastInterestDate) {
+        this.lastInterestDate = lastInterestDate;
     }
 }

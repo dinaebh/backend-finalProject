@@ -22,4 +22,3 @@ public interface UserControllerInterface {
      */
     User saveUser(User user);
 }
-

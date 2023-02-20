@@ -18,6 +18,7 @@ import static jakarta.persistence.FetchType.EAGER;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     /**
@@ -51,5 +52,8 @@ public class User {
     private Collection<Role> roles = new ArrayList<>();
 
     public User(String name, String username, String password) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
     }
 }

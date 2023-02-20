@@ -3,6 +3,7 @@ package com.example.backendfinalProject.models.bankAccount;
 import com.example.backendfinalProject.models.enums.Status;
 import com.example.backendfinalProject.models.user.AccountHolder;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,7 +24,8 @@ public class Account {
     @JoinColumn (name = "secondary_owner")
     private AccountHolder secondaryOwner;
     private final BigDecimal penaltyFee = BigDecimal.valueOf(40);
-    private LocalDate creationDate;
+    @NotNull
+    private LocalDate creationDate = LocalDate.now();
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -95,5 +97,18 @@ public class Account {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accountId=" + accountId +
+                ", balance=" + balance +
+                ", primaryOwner=" + primaryOwner +
+                ", secondaryOwner=" + secondaryOwner +
+                ", penaltyFee=" + penaltyFee +
+                ", creationDate=" + creationDate +
+                ", status=" + status +
+                '}';
     }
 }

@@ -26,18 +26,15 @@ public class AccountHolderService {
 
     //Transfer money
     public void transferMoney(Long senderAccountId, Long receiverAccountId, BigDecimal money) {
-        if(accountRepository.findById(senderAccountId).isPresent()) {
-            Account account = accountRepository.findById(senderAccountId).orElseThrow(() ->
-                    new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Can't find the account holder"));
+        if(accountRepository.findById(senderAccountId).isPresent()){
+        Account account = accountRepository.findById(senderAccountId).get();
 
             if(account == null) throw new IllegalArgumentException("This account does not exist");
             if(account.getBalance().compareTo(money) < 0) throw new IllegalArgumentException("Insufficient balance. Can't continue with the transaction");
 
             if(accountRepository.findById(receiverAccountId).isPresent()) {
-                Account account1 = accountRepository.findById(receiverAccountId).orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                "Can't find the account holder"));
+                Account account1 = accountRepository.findById(receiverAccountId).get();
+
                 account1.setBalance(account1.getBalance().add(money));
                 account.setBalance(account.getBalance().subtract(money));
                 accountRepository.save(account);

@@ -79,7 +79,19 @@ public class SecurityConfig {
                 .requestMatchers("/api/login/**").permitAll()
                 .requestMatchers(GET, "/api/users").hasAnyAuthority("ROLE_USER")
                 .requestMatchers(POST, "/api/users").hasAnyAuthority("ROLE_ADMIN")
-                .anyRequest().authenticated());
+                .requestMatchers(PUT, "/transfer/**").hasAnyAuthority("ROLE_USER")
+                .requestMatchers(GET, "/balance/{accountId}").hasAnyAuthority("ROLE_USER")
+                .requestMatchers(POST, "/new-checking-account").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(POST, "/new-savings-account").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(POST, "/new-creditcard").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(GET, "/balance/**").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(PATCH, "/balance/**").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(DELETE, "/delete/**").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(POST, "/create**").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(POST, "/transfer/**").hasAnyAuthority("ROLE_THIRDPARTY")
+                .requestMatchers(POST, "/transfer-receive/**").hasAnyAuthority("ROLE_THIRDPARTY")
+
+                .anyRequest().permitAll());
         // add the custom authentication filter to the http security object
         http.addFilter(customAuthenticationFilter);
         // Add the custom authorization filter before the standard authentication filter.
@@ -89,4 +101,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-

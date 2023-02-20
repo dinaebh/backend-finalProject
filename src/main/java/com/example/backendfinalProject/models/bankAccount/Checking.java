@@ -13,11 +13,12 @@ public class Checking extends Account {
 
     @NotNull
     private final BigDecimal minimumBalance = BigDecimal.valueOf(250);
+    @NotNull
     private final BigDecimal monthlyMaintenanceFee = BigDecimal.valueOf(12);
     private String secretKey;
 
     public Checking(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, LocalDate creationDate, Status status, String secretKey) {
-        super(balance, primaryOwner, secondaryOwner, creationDate, status);
+        super(balance, primaryOwner, secondaryOwner,  creationDate, status);
         this.secretKey = secretKey;
     }
 

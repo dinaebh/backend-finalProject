@@ -1,8 +1,11 @@
 package com.example.backendfinalProject.services.impl;
 
 import com.example.backendfinalProject.DTOs.AccountDTO;
+import com.example.backendfinalProject.DTOs.UserDTO;
 import com.example.backendfinalProject.models.bankAccount.*;
 import com.example.backendfinalProject.models.user.AccountHolder;
+import com.example.backendfinalProject.models.user.Admin;
+import com.example.backendfinalProject.models.user.ThirdParty;
 import com.example.backendfinalProject.repositories.bankAccRepositories.*;
 import com.example.backendfinalProject.repositories.userRepositories.AccountHolderRepository;
 import com.example.backendfinalProject.repositories.userRepositories.AdminRepository;
@@ -35,6 +38,8 @@ public class AdminService {
     @Autowired
     private CreditCardRepository creditCardRepository;
 
+    @Autowired
+    UserService userService;
 
     //Creation of checking account.
     public Account createCheckingAccount(AccountDTO newChecking) {
@@ -106,6 +111,7 @@ public class AdminService {
             CreditCard creditCard = new CreditCard(newCard.getBalance(), primaryOwner, secondaryOwner,
                     newCard.getCreationDate(), newCard.getCreditLimit(), newCard.getInterestRate());
 
+            System.err.println(primaryOwner);
             return creditCardRepository.save(creditCard);
         }
 
@@ -114,27 +120,24 @@ public class AdminService {
 
     //Admins should be able to access the balance for any account and to modify it.
     public BigDecimal accessBalance(Long accountId) {
-        if (accountRepository.findById(accountId).isPresent()) {
-            Account foundAccount = accountRepository.findById(accountId).orElseThrow(() ->
-                    new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "The account you are looking for doesn't exist in the database"));
-            accountRepository.save(foundAccount);
-            return foundAccount.getBalance();
-        }
-        throw new IllegalArgumentException("Can't find any account matching with this Id");
+
+        Account selectedAcc = accountRepository.findById(accountId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "The account you are looking for doesn't exist in the database"));
+        return selectedAcc.getBalance();
+
     }
 
     //Admins can access and modify.
     public BigDecimal modifyBalance(Long accountId, BigDecimal newBalance) {
-        if (accountRepository.findById(accountId).isPresent()) {
-            Account foundAccount = accountRepository.findById(accountId).orElseThrow(() ->
-                    new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "The account you are looking for doesn't exist in the database"));
-            foundAccount.setBalance(newBalance);
-            accountRepository.save(foundAccount);
-            return foundAccount.getBalance();
-        }
-        throw new IllegalArgumentException("Can't find any account matching with this Id");
+
+        Account selectedAcc = accountRepository.findById(accountId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "The account you are looking for doesn't exist in the database"));
+        selectedAcc.setBalance(newBalance);
+        accountRepository.save(selectedAcc);
+        return selectedAcc.getBalance();
+
     }
 
     //Delete account.
@@ -143,5 +146,30 @@ public class AdminService {
             accountRepository.deleteById(accountId);
         }
         throw new IllegalArgumentException("Can't find any account matching with this Id");
+    }
+
+    //Create admin user.
+    public Admin createAdmin(UserDTO admin){
+
+        Admin newAdmin =new Admin(admin.getName(), admin.getUsername(), admin.getPassword());
+        userService.saveUser(newAdmin);
+        userService.addRoleToUser(newAdmin.getUsername(), "ROLE_ADMIN");
+
+        return newAdmin;
+    }
+
+    public AccountHolder createAccountHolder(UserDTO accountHolderDTO){
+        AccountHolder accountholder = new AccountHolder(accountHolderDTO.getName(), accountHolderDTO.getUsername(), accountHolderDTO.getPassword(), LocalDate.now(), null, null);
+        userService.saveUser(accountholder);
+        userService.addRoleToUser(accountholder.getUsername(), "ROLE_USER");
+
+        return accountholder;
+    }
+
+    public ThirdParty createThirdParty(UserDTO thirdPartyDTO){
+        ThirdParty thirdParty = new ThirdParty(thirdPartyDTO.getName(), thirdPartyDTO.getUsername(), thirdPartyDTO.getPassword(), null);
+        userService.saveUser(thirdParty);
+        userService.addRoleToUser(thirdParty.getUsername(), "ROLE_THIRDPARTY");
+        return thirdParty;
     }
 }

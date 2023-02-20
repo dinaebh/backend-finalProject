@@ -50,6 +50,7 @@ public class BackendFinalProjectApplication {
 		return args -> {
 			userService.saveRole(new Role(null, "ROLE_USER"));
 			userService.saveRole(new Role(null, "ROLE_ADMIN"));
+			userService.saveRole(new Role(null, "ROLE_THIRDPARTY"));
 
 			userService.saveUser(new User(null, "John Doe", "john", "1234", new ArrayList<>()));
 			userService.saveUser(new User(null, "James Smith", "james", "1234", new ArrayList<>()));
@@ -62,18 +63,6 @@ public class BackendFinalProjectApplication {
 			userService.addRoleToUser("chris", "ROLE_ADMIN");
 			userService.addRoleToUser("chris", "ROLE_USER");
 
-			AccountHolder accountHolder1 = accountHolderRepository.save(new AccountHolder("Dina El Badri", "dinaebh", "123456",
-					LocalDate.of(1994, 2, 12),
-					new Address("Dalt", "3", "08980"),
-					new Address("Dalt", "3", "08980")));
-			AccountHolder accountHolder2 = accountHolderRepository.save(new AccountHolder("Kim SeokWoo", "seokw", "456789",
-					LocalDate.of(1996, 8, 07),
-					new Address("Gangnam", "2", "00011"),
-					new Address("Gangnam", "2", "00011")));
-			AccountHolder accountHolder3 = accountHolderRepository.save(new AccountHolder("Lee DongMin", "eunw", "147258",
-					LocalDate.of(1997, 03, 30),
-					new Address("Jeonju", "5", "11100"),
-					new Address("Jeonju", "5", "11100")));
 		};
 	}
 

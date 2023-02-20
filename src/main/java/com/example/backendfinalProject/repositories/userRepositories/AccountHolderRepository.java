@@ -9,5 +9,5 @@ public interface AccountHolderRepository extends JpaRepository<AccountHolder, Lo
 
 
 
-    AccountHolder findByName();
+    AccountHolder findByName(String sender);
 }

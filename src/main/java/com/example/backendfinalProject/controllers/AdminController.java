@@ -1,7 +1,11 @@
 package com.example.backendfinalProject.controllers;
 
 import com.example.backendfinalProject.DTOs.AccountDTO;
+import com.example.backendfinalProject.DTOs.UserDTO;
 import com.example.backendfinalProject.models.bankAccount.Account;
+import com.example.backendfinalProject.models.user.AccountHolder;
+import com.example.backendfinalProject.models.user.Admin;
+import com.example.backendfinalProject.models.user.ThirdParty;
 import com.example.backendfinalProject.services.impl.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,5 +53,23 @@ public class AdminController {
     @ResponseStatus (HttpStatus.OK)
     public void deleteAccount (@PathVariable Long accountId) {
         adminService.deleteAccount(accountId);
+    }
+
+    @PostMapping ("/create-admin")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Admin createAdminAcc(@RequestBody UserDTO admin){
+        return adminService.createAdmin(admin);
+    }
+
+    @PostMapping ("/create-accountholder")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AccountHolder createAccountHolder(@RequestBody UserDTO accountHolder){
+        return adminService.createAccountHolder(accountHolder);
+    }
+
+    @PostMapping("/create-thirdparty")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ThirdParty createThirdParty(@RequestBody UserDTO thirdParty){
+        return adminService.createThirdParty(thirdParty);
     }
 }

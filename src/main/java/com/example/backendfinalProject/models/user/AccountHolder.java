@@ -27,10 +27,10 @@ public class AccountHolder extends User{
     )
     private Address mailingAddress;
 
-    @OneToMany(mappedBy = "primaryOwner")
+    @OneToMany(mappedBy = "primaryOwner", fetch = FetchType.EAGER)
     private List<Account> primaryOwnershipList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "secondaryOwner")
+    @OneToMany(mappedBy = "secondaryOwner", fetch = FetchType.EAGER)
     private List<Account> secondaryOwnershipList = new ArrayList<>();
 
     public AccountHolder() {
@@ -81,6 +81,17 @@ public class AccountHolder extends User{
 
     public void setSecondaryOwnershipList(List<Account> secondaryOwnershipList) {
         this.secondaryOwnershipList = secondaryOwnershipList;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountHolder{" +
+                "dateOfBirth=" + dateOfBirth +
+                ", primaryAddress=" + primaryAddress +
+                ", mailingAddress=" + mailingAddress +
+                ", primanyOwnershipList=" + primaryOwnershipList +
+                ", secondaryOwnershipList=" + secondaryOwnershipList +
+                '}';
     }
 }
 

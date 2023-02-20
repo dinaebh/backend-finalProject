@@ -31,19 +31,19 @@ public class ThirdPartyService {
                     new ResponseStatusException(HttpStatus.NOT_FOUND,
                             "Account not found in the database"));
 
-            if(account instanceof Checking) {
-                Checking checkingAccount = (Checking) account;
-                if(!checkingAccount.getSecretKey().equals(secretKey)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The secret key does not match");
-            }
+        if(account instanceof Checking){
+            Checking checkingAccount = (Checking) account;
+            if(!checkingAccount.getSecretKey().equals(secretKey)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The secret key does not match");
+        }
 
-            if(account instanceof StudentChecking) {
-                StudentChecking studentChecking = (StudentChecking) account;
-                if(!studentChecking.getSecretKey().equals(secretKey)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The secret key does not match");
-            }
+        if(account instanceof StudentChecking){
+            StudentChecking studentAccount = (StudentChecking) account;
+            if(!studentAccount.getSecretKey().equals(secretKey)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The secret key does not match");
+        }
 
-            if(account instanceof Savings) {
-                Savings savingsAccount = (Savings) account;
-                if(!savingsAccount.getSecretKey().equals(secretKey)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The secret key does not match");
+        if(account instanceof Savings){
+            Savings savingsAccount = (Savings) account;
+            if(!savingsAccount.getSecretKey().equals(secretKey)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The secret key does not match");
         }
 
             account.setBalance(account.getBalance().add(money));

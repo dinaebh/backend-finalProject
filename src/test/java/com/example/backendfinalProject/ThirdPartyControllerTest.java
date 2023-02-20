@@ -4,10 +4,13 @@ import com.example.backendfinalProject.models.bankAccount.Checking;
 import com.example.backendfinalProject.models.user.AccountHolder;
 import com.example.backendfinalProject.models.user.Address;
 import com.example.backendfinalProject.models.user.ThirdParty;
+import com.example.backendfinalProject.repositories.bankAccRepositories.AccountRepository;
+import com.example.backendfinalProject.repositories.bankAccRepositories.CheckingRepository;
 import com.example.backendfinalProject.repositories.userRepositories.AccountHolderRepository;
 import com.example.backendfinalProject.repositories.userRepositories.ThirdPartyRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,12 +39,17 @@ public class ThirdPartyControllerTest {
 
     private MockMvc mockMvc;
 
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());;
 
     @Autowired
     ThirdPartyRepository thirdPartyRepository;
     @Autowired
-    private AccountHolderRepository accountHolderRepository;
+    AccountHolderRepository accountHolderRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
+    @Autowired
+    private CheckingRepository checkingRepository;
 
     @BeforeEach
     void setup() {
@@ -60,14 +68,15 @@ public class ThirdPartyControllerTest {
         AccountHolder accountHolder1 = accountHolderRepository.save(new AccountHolder("Dina El Badri", "dinaebh", "123456",
                 LocalDate.of(1994, 2, 12),
                 new Address("Daal", "5", "08050"),
+
                 new Address("Daal", "5", "08050")));
 
-        Checking checking = new Checking(
+        Checking checking = checkingRepository.save(new Checking(
                 new BigDecimal( 2000), accountHolder1, null,
                 LocalDate.of(2023,01,05),
-                ACTIVE,"SFS251F");
+                ACTIVE,"SFS251F"));
 
-        ThirdParty thirdParty = thirdPartyRepository.save(new ThirdParty("Kim SeokWoo", "RoWoon", "123456", "24513FFS"));
+        ThirdParty thirdParty = thirdPartyRepository.save(new ThirdParty("Kim SeokWoo", "RoWoon", "123456", ""));
 
         //convert to Json
         String body = objectMapper.writeValueAsString(thirdParty);
@@ -84,6 +93,7 @@ public class ThirdPartyControllerTest {
         AccountHolder accountHolder1 = accountHolderRepository.save(new AccountHolder("Dina El Badri", "dinaebh", "123456",
                 LocalDate.of(1994, 2, 12),
                 new Address("Daal", "5", "08050"),
+
                 new Address("Daal", "5", "08050")));
 
         Checking checking = new Checking(
@@ -94,7 +104,7 @@ public class ThirdPartyControllerTest {
         ThirdParty thirdParty = thirdPartyRepository.save(new ThirdParty("Kim SeokWoo", "RoWoon", "123456", "24513FFS"));
 
         //convert to Json
-        String body = objectMapper.writeValueAsString(checking);
+        String body = objectMapper.writeValueAsString(thirdParty);
         MvcResult result = mockMvc.perform(post("/transfer-receive/24513FFS" + checking.getAccountId() + "secretKey=SFS251F?money=2000").content(body)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated()).andReturn();

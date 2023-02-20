@@ -39,7 +39,7 @@ public class Address {
         return postalCode;
     }
 
-    public void setPostalCode(String PostalCode) {
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 }
